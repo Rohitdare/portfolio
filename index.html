@@ -143,10 +143,19 @@
 <section id="contact" class="section" data-aos="fade-up">
   <div class="container">
     <h2 class="section-title text-center">Contact Me</h2>
-    <form action="https://formspree.io/f/maykbbbo" method="POST">
-      <div class="mb-3"><input type="text" name="name" class="form-control" placeholder="Whats your good name" required></div>
-      <div class="mb-3"><input type="email" name="email" class="form-control" placeholder="Whats your email" required></div>
-      <div class="mb-3"><textarea name="message" class="form-control" rows="4" placeholder="Whats your" required></textarea></div>
+    <form name="contact" method="POST" data-netlify="true">
+      <!-- Hidden input to identify the form to Netlify -->
+      <input type="hidden" name="form-name" value="contact" />
+      
+      <div class="mb-3">
+        <input type="text" name="name" class="form-control" placeholder="What's your good name" required>
+      </div>
+      <div class="mb-3">
+        <input type="email" name="email" class="form-control" placeholder="What's your email" required>
+      </div>
+      <div class="mb-3">
+        <textarea name="message" class="form-control" rows="4" placeholder="What's your message" required></textarea>
+      </div>
       <button type="submit" class="btn btn-purple">Send Message</button>
     </form>
   </div>
