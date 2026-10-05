@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rohit — Software Developer | Trainer ID Portfolio</title>
+  <meta name="description"
+    content="Trainer ID Developer Portfolio of Rohit — Full-Stack Developer & AI Engineer. Features an immersive 3D suspended badge interface, battle-tested tech stack, shipped artifacts, and career timeline.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- DOT GRID CANVAS (Fixed full-viewport interactive layer)     -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div id="dot-grid-bg" class="dot-grid-bg" aria-hidden="true">
+    <canvas id="dot-grid-canvas"></canvas>
+  </div>
+
+  <!-- Ambient Glow -->
+  <div class="ambient-glow" aria-hidden="true"></div>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- LEVEL 1: DEDICATED GIF ARTWORK LAYER                        -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div class="gif-artwork-layer" aria-hidden="true">
+    <img src="assets/katana.gif" alt="Katana Manga Artwork" class="gif-artwork-img" onerror="this.onerror=null; this.src='assets/katana-manga.png';">
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- FIXED HEADER / NAVIGATION                                  -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <header class="app-header">
+    <div class="header-left">
+      <!-- Pokeball Capsule -->
+      <div class="trainer-capsule" title="Trainer League Indicators">
+        <div class="pokeball-pip" title="Pokeball 01"></div>
+        <div class="pokeball-pip" title="Pokeball 02"></div>
+        <div class="pokeball-pip" title="Pokeball 03"></div>
+      </div>
+
+      <!-- Live IST Clock with Emerald Beacon -->
+      <div class="time-beacon">
+        <span class="beacon-dot"></span>
+        <span id="ist-clock">IST --:-- --</span>
+      </div>
+    </div>
+
+    <div class="header-center">
+      <!-- Pill Navigation Bar — Fixed Anchor for Lanyard -->
+      <nav class="nav-pill-bar" aria-label="Trainer Navigation">
+        <a class="nav-link active" data-path="home" href="#home">Home</a>
+        <a class="nav-link" data-path="stack" href="#stack">Stack</a>
+        <a class="nav-link" data-path="projects" href="#projects">Projects</a>
+        <a class="nav-link" data-path="experience" href="#experience">Experience</a>
+        <a class="nav-link" data-path="blogs" href="#blogs">Blogs</a>
+        <a class="nav-link" data-path="contact" href="#contact">Contact</a>
+        <div class="nav-divider"></div>
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle Dark / Light Mode" title="Toggle Theme">
+          <span id="theme-icon" class="material-symbols-outlined" style="font-size: 18px;">dark_mode</span>
+        </button>
+      </nav>
+    </div>
+
+    <div class="header-right">
+      <!-- Nav Avatar Icon -->
+      <div class="nav-avatar-btn" title="Trainer Rohit">
+        <span class="material-symbols-outlined" style="font-size: 18px;">person</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- FIXED TELEMETRY HUD (Bottom-Right)                         -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <aside class="telemetry-hud" aria-hidden="true">
+    <span id="telemetry-index" class="telemetry-index">01 / 06</span>
+    <div class="telemetry-rail">
+      <div id="telemetry-bar" class="telemetry-bar"></div>
+    </div>
+  </aside>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- MAIN 3D STAGE & SUSPENDED TRAINER ID BADGE                  -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <main class="main-stage">
+
+    <!-- SUSPENDED LANYARD MECHANISM -->
+    <div id="lanyard-assembly" class="lanyard-assembly badge-entering">
+      <!-- Crimson Woven Nylon Ribbon -->
+      <div class="lanyard-strap">
+        <div class="lanyard-texture"></div>
+        <div class="lanyard-seam"></div>
+      </div>
+      <!-- Heavy Gunmetal Clasp Assembly -->
+      <div class="lanyard-clasp">
+        <div class="clasp-rivet"></div>
+        <div class="clasp-rivet"></div>
+      </div>
+      <!-- Swivel Ring -->
+      <div class="swivel-ring"></div>
+      <!-- Hook Clasp Tongue Entering Card Slot -->
+      <div class="hook-tongue">
+        <div class="hook-slot-line"></div>
+      </div>
+    </div>
+
+    <!-- 3D CARD CONTAINER -->
+    <div id="card-3d-wrapper" class="card-3d-wrapper resting badge-entering">
+      <article id="trainer-card" class="trainer-card">
+        <!-- Paper Texture Grain -->
+        <div class="card-paper-texture"></div>
+        <!-- Dynamic Holographic Specular Sheen Layer -->
+        <div class="card-specular-sheen"></div>
+
+        <!-- Punch Slot Cutout At Top -->
+        <div class="card-punch-slot-container">
+          <div class="card-punch-slot">
+            <div class="punch-slot-tongue-tip"></div>
+          </div>
+        </div>
+
+        <!-- CARD META HEADER -->
+        <header class="card-meta-header">
+          <div class="meta-id-group">
+            <span class="id-pulse-pip"></span>
+            <span class="meta-id-text">TRAINER ID // NO. 0842</span>
+            <span class="meta-sep">|</span>
+            <span class="meta-ver">CL-VER: 4.2.9</span>
+          </div>
+          <div class="meta-status-pill">
+            <span class="status-dot"></span>
+            <span class="status-text">AVAILABLE FOR HIRE</span>
+          </div>
+        </header>
+
+        <!-- CARD SECTIONS CONTAINER -->
+        <div class="card-section-container">
+
+          <!-- ───────────────────────────────────────────────────────── -->
+          <!-- SECTION 01: HOME                                          -->
+          <!-- ───────────────────────────────────────────────────────── -->
+          <section id="section-home" class="card-section active">
+            <!-- Avatar & Profile Intro -->
+            <div class="home-profile-row">
+              <div class="avatar-frame-wrapper">
+                <div class="avatar-frame">
+                  <img src="assets/avatar.png" alt="Rohit Portrait" class="avatar-image">
+                  <div class="avatar-holo-stamp">GEN 09</div>
+                </div>
+                <div class="avatar-corner-stamp" title="Rohit Master Rank">R</div>
+              </div>
+
+              <div class="bio-lockup">
+                <div class="name-level-header">
+                  <h1 class="hero-name">ROHIT</h1>
+                  <span class="level-tag">LVL. 99 MASTER</span>
+                </div>
+                <h2 class="hero-role">Software Developer</h2>
+                <div class="trainer-accent-bar"></div>
+                <p class="hero-bio-p">
+                  I'm a developer interested in building interactive websites and applications. I enjoy modern web
+                  technologies, clean user interfaces, and experimenting with animations and creative digital
+                  experiences.
+                </p>
+
+                <!-- Monochips -->
+                <div class="meta-chips-row">
+                  <div class="meta-chip">
+                    <span class="material-symbols-outlined" style="color: var(--vermilion);">location_on</span>
+                    <span>PUNE , IN</span>
+                  </div>
+                  <div class="meta-chip">
+                    <span class="material-symbols-outlined" style="color: var(--trainer-gold);">bolt</span>
+                    <span>5+ YRS EXP</span>
+                  </div>
+                  <div class="meta-chip">
+                    <span class="material-symbols-outlined" style="color: #00504A;">terminal</span>
+                    <span>FULL-STACK</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quote Callout Block -->
+            <div class="quote-card">
+              <span class="quote-mark">“</span>
+              <div class="quote-text-container">
+                <p class="quote-content">If we don't fight, we can't win.</p>
+                <span class="quote-author">— Eren Yeager</span>
+              </div>
+              <span class="kanji-watermark">戦え</span>
+            </div>
+
+            <!-- GitHub Contribution Matrix -->
+            <div class="heatmap-panel">
+              <div class="heatmap-header">
+                <div class="heatmap-title-group">
+                  <span class="material-symbols-outlined"
+                    style="font-size: 16px; color: var(--vermilion);">commit</span>
+                  <span class="heatmap-title">CONTRIBUTION MATRIX // @Rohitdare</span>
+                </div>
+                <span id="heatmap-total-count" class="heatmap-count">101 contributions in the last year</span>
+              </div>
+
+              <!-- Month Labels -->
+              <div id="heatmap-months-row" class="heatmap-months-row">
+                <span>OCT</span><span>NOV</span><span>DEC</span><span>JAN</span><span>FEB</span><span>MAR</span><span>APR</span><span>MAY</span><span>JUN</span><span>JUL</span><span>AUG</span><span>SEP</span><span>OCT</span>
+              </div>
+
+              <!-- 52-Week Dot Canvas Grid -->
+              <div class="heatmap-scroll-area">
+                <div id="heatmap-grid" class="heatmap-grid"></div>
+              </div>
+
+              <!-- Legend & Barcode Stamp -->
+              <div class="heatmap-footer">
+                <div class="heatmap-legend">
+                  <span>Less</span>
+                  <div class="legend-swatches">
+                    <span class="legend-pip" style="background-color: #DDD5C5;"></span>
+                    <span class="legend-pip" style="background-color: #F5B5B8;"></span>
+                    <span class="legend-pip" style="background-color: #EE7B83;"></span>
+                    <span class="legend-pip" style="background-color: #E63946;"></span>
+                    <span class="legend-pip" style="background-color: #B5232F;"></span>
+                  </div>
+                  <span>More</span>
+                </div>
+
+                <div class="barcode-stamp">
+                  <div class="barcode-bars">
+                    <span class="barcode-bar" style="width: 2px;"></span>
+                    <span class="barcode-bar" style="width: 1px;"></span>
+                    <span class="barcode-bar" style="width: 3px;"></span>
+                    <span class="barcode-bar" style="width: 1.5px;"></span>
+                    <span class="barcode-bar" style="width: 4px;"></span>
+                    <span class="barcode-bar" style="width: 1px;"></span>
+                    <span class="barcode-bar" style="width: 2px;"></span>
+                  </div>
+                  <span class="barcode-label">AUTH_COMMIT_LOG</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quicklinks & Actions -->
+            <div class="card-actions-row">
+              <div class="social-quicklinks">
+                <a class="social-link" href="https://github.com/Rohitdare" target="_blank" rel="noopener noreferrer">
+                  <span>github.com/Rohitdare</span>
+                  <span class="material-symbols-outlined">arrow_outward</span>
+                </a>
+                <a class="social-link" href="https://x.com/rohit_dev" target="_blank" rel="noopener noreferrer">
+                  <span>x.com/rohit_dev</span>
+                  <span class="material-symbols-outlined">arrow_outward</span>
+                </a>
+              </div>
+              <a class="primary-cta-btn" href="#stack">
+                <span>Inspect Battle Stack</span>
+                <span class="material-symbols-outlined">arrow_forward</span>
+              </a>
+            </div>
+          </section>
+
+          <!-- ───────────────────────────────────────────────────────── -->
+          <!-- SECTION 02: STACK                                         -->
+          <!-- ───────────────────────────────────────────────────────── -->
+          <section id="section-stack" class="card-section">
+            <div class="section-headline-group">
+              <div class="section-eyebrow">
+                <span>01 / STACK</span>
+                <span class="eyebrow-line"></span>
+                <span>ARMORY &amp; RUNTIMES</span>
+              </div>
+              <div
+                style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.5rem;">
+                <h2 class="section-title">Tools I build with</h2>
+                <span class="section-subtitle">REV 2025.4 // VERIFIED STACK</span>
+              </div>
+            </div>
+
+            <!-- Stack Rows -->
+            <div class="stack-table">
+              <!-- 01 Language -->
+              <div class="stack-row">
+                <div class="stack-row-left">
+                  <span class="stack-index-num">01</span>
+                  <div>
+                    <h3 class="stack-category-name">Language</h3>
+                    <p class="stack-category-sub">Core Compilers</p>
+                  </div>
+                </div>
+                <div class="stack-row-chips">
+                  <div class="tech-chip"><span class="chip-badge"
+                      style="background: rgba(49, 120, 198, 0.2); color: #3178C6;">TS</span> TypeScript</div>
+                  <div class="tech-chip"><span class="chip-badge"
+                      style="background: rgba(247, 223, 30, 0.25); color: #A08500;">JS</span> JavaScript</div>
+                  <div class="tech-chip"><span class="material-symbols-outlined"
+                      style="font-size: 15px; color: #3776AB;">terminal</span> Python</div>
+                </div>
+              </div>
+
+              <!-- 02 Frontend -->
+              <div class="stack-row">
+                <div class="stack-row-left">
+                  <span class="stack-index-num">02</span>
+                  <div>
+                    <h3 class="stack-category-name">Frontend</h3>
+                    <p class="stack-category-sub">Interface &amp; Graphics</p>
+                  </div>
+                </div>
+                <div class="stack-row-chips">
+                  <div class="tech-chip"><span class="material-symbols-outlined"
+                      style="font-size: 15px; color: #087EA4;">flutter</span> React</div>
+                  <div class="tech-chip"><span class="chip-badge" style="background: #000; color: #FFF;">N</span>
+                    Next.js</div>
+                  <div class="tech-chip"><span class="material-symbols-outlined"
+                      style="font-size: 15px; color: #06B6D4;">css</span> Tailwind CSS</div>
+                  <div class="tech-chip">shadcn/ui</div>
+                  <div class="tech-chip">Radix UI</div>
+                  <div class="tech-chip"><span class="material-symbols-outlined"
+                      style="font-size: 15px; color: var(--vermilion);">animation</span> Motion</div>
+                  <div class="tech-chip">Expo</div>
+                  <div class="tech-chip">TanStack</div>
+                </div>
+              </div>
+
+              <!-- 03 Backend & DB -->
+              <div class="stack-row">
+                <div class="stack-row-left">
+                  <span class="stack-index-num">03</span>
+                  <div>
+                    <h3 class="stack-category-name">Backend &amp; DB</h3>
+                    <p class="stack-category-sub">Server &amp; Storage</p>
+                  </div>
+                </div>
+                <div class="stack-row-chips">
+                  <div class="tech-chip"><span class="material-symbols-outlined"
+                      style="font-size: 15px; color: #339933;">dns</span> Node.js</div>
+                  <div class="tech-chip">Bun</div>
+                  <div class="tech-chip"><span class="material-symbols-outlined"
+                      style="font-size: 15px; color: #4169E1;">database</span> PostgreSQL</div>
+                  <div class="tech-chip"><span class="material-symbols-outlined"
+                      style="font-size: 15px; color: #47A248;">storage</span> MongoDB</div>
+                  <div class="tech-chip"><span class="material-symbols-outlined"
+                      style="font-size: 15px; color: #DC382D;">memory</span> Redis</div>
+                  <div class="tech-chip">nginx</div>
+                </div>
+              </div>
+
+              <!-- 04 Workflow & AI -->
+              <div class="stack-row">
+                <div class="stack-row-left">
+                  <span class="stack-index-num">04</span>
+                  <div>
+                    <h3 class="stack-category-name">Workflow &amp; AI</h3>
+                    <p class="stack-category-sub">Tooling &amp; Agents</p>
+                  </div>
+                </div>
+                <div class="stack-row-chips">
+                  <div class="tech-chip"><span class="material-symbols-outlined"
+                      style="font-size: 15px; color: #D97706;">smart_toy</span> Claude</div>
+                  <div class="tech-chip"><span class="material-symbols-outlined"
+                      style="font-size: 15px; color: #0EA5E9;">code</span> Cursor</div>
+                  <div class="tech-chip"><span class="material-symbols-outlined"
+                      style="font-size: 15px; color: #8B5CF6;">auto_awesome</span> Gemini</div>
+                  <div class="tech-chip"><span class="material-symbols-outlined"
+                      style="font-size: 15px; color: #10A37F;">psychology</span> ChatGPT</div>
+                  <div class="tech-chip"><span class="material-symbols-outlined"
+                      style="font-size: 15px; color: #F05032;">commit</span> Git &amp; GitHub</div>
+                  <div class="tech-chip"><span class="material-symbols-outlined"
+                      style="font-size: 15px; color: #2496ED;">deployed_code</span> Docker</div>
+                  <div class="tech-chip">Vercel</div>
+                </div>
+              </div>
+
+              <!-- 05 Analytics -->
+              <div class="stack-row">
+                <div class="stack-row-left">
+                  <span class="stack-index-num">05</span>
+                  <div>
+                    <h3 class="stack-category-name">Analytics</h3>
+                    <p class="stack-category-sub">Observability</p>
+                  </div>
+                </div>
+                <div class="stack-row-chips">
+                  <div class="tech-chip"><span class="material-symbols-outlined"
+                      style="font-size: 15px; color: #6366F1;">analytics</span> OpenPanel</div>
+                  <div class="tech-chip"><span class="material-symbols-outlined"
+                      style="font-size: 15px; color: #F54E00;">insights</span> PostHog</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bottom Actions -->
+            <div class="card-actions-row">
+              <span class="section-subtitle">25+ TOOLS &amp; RUNTIMES DEPLOYED</span>
+              <a class="primary-cta-btn" href="#projects">
+                <span>View Shipped Artifacts</span>
+                <span class="material-symbols-outlined">arrow_forward</span>
+              </a>
+            </div>
+          </section>
+
+          <!-- ───────────────────────────────────────────────────────── -->
+          <!-- SECTION 03: PROJECTS                                      -->
+          <!-- ───────────────────────────────────────────────────────── -->
+          <section id="section-projects" class="card-section">
+            <div class="section-headline-group">
+              <div class="section-eyebrow">
+                <span>02 / PROJECTS</span>
+                <span class="eyebrow-line"></span>
+                <span>SHIPPED ARTIFACTS</span>
+              </div>
+              <div
+                style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.5rem;">
+                <h2 class="section-title">Things I've shipped</h2>
+                <span class="section-subtitle">4 LIVE PRODUCTION BUILDS</span>
+              </div>
+            </div>
+
+            <div class="projects-grid">
+              <!-- PROJECT 01: Bmarked -->
+              <article class="project-card">
+                <div>
+                  <div class="project-preview">
+                    <div class="preview-top-bar">
+                      <span class="preview-pill">TOOL // BOOKMARKS</span>
+                      <div class="preview-dots">
+                        <span class="preview-dot"></span>
+                        <span class="preview-dot"></span>
+                        <span class="preview-dot"></span>
+                      </div>
+                    </div>
+                    <div class="preview-inner-mock">
+                      <div class="mock-search-bar">
+                        <span>/bookmarks/system-design</span>
+                        <span>124 items</span>
+                      </div>
+                      <div class="mock-tags-row">
+                        <div class="mock-tag-item"><span style="color: var(--trainer-gold);">●</span> Tailwind Docs
+                        </div>
+                        <div class="mock-tag-item"><span style="color: var(--vermilion);">●</span> RFC 9110 HTTP</div>
+                        <div class="mock-tag-item"><span style="color: #6FD8CC;">●</span> Rust Micro</div>
+                      </div>
+                    </div>
+                    <div class="preview-footer-telemetry">
+                      <span>INDEXED: 1,840 REPOS</span>
+                      <span style="color: #6FD8CC;">SYNC: ACTIVE</span>
+                    </div>
+                  </div>
+
+                  <div class="project-info-header">
+                    <h3 class="project-title">Bmarked</h3>
+                    <div class="project-live-indicator">
+                      <span class="status-dot"></span>
+                      <span>Live</span>
+                    </div>
+                  </div>
+                  <p class="project-category">Management Tool</p>
+                  <p class="project-description">
+                    A simple bookmark management tool that keeps all your favorite links organized in one place with
+                    instant fuzzy search.
+                  </p>
+                </div>
+                <div class="project-tags-row">
+                  <span class="project-tag-pill">Next.js</span>
+                  <span class="project-tag-pill">TypeScript</span>
+                  <span class="project-tag-pill">Tailwind CSS</span>
+                  <span class="project-tag-pill">Node.js</span>
+                </div>
+              </article>
+
+              <!-- PROJECT 02: Task Tracker -->
+              <article class="project-card">
+                <div>
+                  <div class="project-preview">
+                    <div class="preview-top-bar">
+                      <span class="preview-pill">PRODUCTIVITY // SPRINT</span>
+                      <div class="preview-dots">
+                        <span class="preview-dot"></span>
+                        <span class="preview-dot"></span>
+                        <span class="preview-dot"></span>
+                      </div>
+                    </div>
+                    <div class="preview-inner-mock">
+                      <div
+                        style="display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 9px; color: #A0A0A8;">
+                        <span>SPRINT VELOCITY: 94%</span>
+                        <span style="color: var(--status-live);">ON TRACK</span>
+                      </div>
+                      <div style="display: flex; gap: 3px; height: 16px; align-items: flex-end; padding: 2px 0;">
+                        <span style="width: 14%; height: 60%; background: #4A494B; border-radius: 2px;"></span>
+                        <span style="width: 14%; height: 90%; background: var(--vermilion); border-radius: 2px;"></span>
+                        <span
+                          style="width: 14%; height: 75%; background: var(--trainer-gold); border-radius: 2px;"></span>
+                        <span
+                          style="width: 14%; height: 100%; background: var(--status-live); border-radius: 2px;"></span>
+                        <span style="width: 14%; height: 50%; background: #4A494B; border-radius: 2px;"></span>
+                        <span style="width: 14%; height: 85%; background: var(--vermilion); border-radius: 2px;"></span>
+                        <span style="width: 14%; height: 95%; background: #6FD8CC; border-radius: 2px;"></span>
+                      </div>
+                    </div>
+                    <div class="preview-footer-telemetry">
+                      <span>STREAK: 42 DAYS</span>
+                      <span style="color: var(--trainer-gold);">RANK: S-TIER</span>
+                    </div>
+                  </div>
+
+                  <div class="project-info-header">
+                    <h3 class="project-title">Task Tracker</h3>
+                    <div class="project-live-indicator">
+                      <span class="status-dot"></span>
+                      <span>Live</span>
+                    </div>
+                  </div>
+                  <p class="project-category">Productivity App</p>
+                  <p class="project-description">
+                    Focus and habit progression engine built for developers, tracking sprint momentum and deep work
+                    metrics.
+                  </p>
+                </div>
+                <div class="project-tags-row">
+                  <span class="project-tag-pill">React</span>
+                  <span class="project-tag-pill">JavaScript</span>
+                  <span class="project-tag-pill">Tailwind CSS</span>
+                </div>
+              </article>
+
+              <!-- PROJECT 03: Softtech Solution -->
+              <article class="project-card">
+                <div>
+                  <div class="project-preview">
+                    <div class="preview-top-bar">
+                      <span class="preview-pill">ENTERPRISE // ARCHITECTURE</span>
+                      <div class="preview-dots">
+                        <span class="preview-dot"></span>
+                        <span class="preview-dot"></span>
+                        <span class="preview-dot"></span>
+                      </div>
+                    </div>
+                    <div class="preview-inner-mock">
+                      <div
+                        style="background: #1C1B1C; border-radius: 4px; padding: 6px; display: flex; justify-content: space-around; font-family: var(--font-mono); font-size: 9px;">
+                        <div><span style="color: #6B655B;">LATENCY:</span> <span
+                            style="color: var(--status-live);">42ms</span></div>
+                        <div><span style="color: #6B655B;">LTV:</span> <span
+                            style="color: var(--trainer-gold);">4.8x</span></div>
+                        <div><span style="color: #6B655B;">UPTIME:</span> <span style="color: #FFF;">99.98%</span></div>
+                      </div>
+                    </div>
+                    <div class="preview-footer-telemetry">
+                      <span>AUDIT: SOC2 TYPE II</span>
+                      <span style="color: var(--status-live);">VERIFIED</span>
+                    </div>
+                  </div>
+
+                  <div class="project-info-header">
+                    <h3 class="project-title">Softtech Solution</h3>
+                    <div class="project-live-indicator">
+                      <span class="status-dot"></span>
+                      <span>Live</span>
+                    </div>
+                  </div>
+                  <p class="project-category">Client Platform Redesign</p>
+                  <p class="project-description">
+                    Architected high-throughput customer portals with sub-50ms render latency and modern design tokens.
+                  </p>
+                </div>
+                <div class="project-tags-row">
+                  <span class="project-tag-pill">React</span>
+                  <span class="project-tag-pill">Tailwind CSS</span>
+                  <span class="project-tag-pill">Vite</span>
+                </div>
+              </article>
+
+              <!-- PROJECT 04: Shikai -->
+              <article class="project-card">
+                <div>
+                  <div class="project-preview">
+                    <div class="preview-top-bar">
+                      <span class="preview-pill">EXTENSION // CHROME</span>
+                      <div class="preview-dots">
+                        <span class="preview-dot"></span>
+                        <span class="preview-dot"></span>
+                        <span class="preview-dot"></span>
+                      </div>
+                    </div>
+                    <div class="preview-inner-mock">
+                      <div
+                        style="background: #151517; padding: 5px 8px; border-radius: 4px; font-family: var(--font-mono); font-size: 9px; display: flex; align-items: center; justify-content: space-between;">
+                        <span style="color: var(--vermilion);">⚔ SHIKAI ACTIVE</span>
+                        <span style="color: #FFF;">14 HUD SHORTCUTS</span>
+                      </div>
+                    </div>
+                    <div class="preview-footer-telemetry">
+                      <span>MANIFEST V3</span>
+                      <span style="color: var(--status-live);">STORE APPROVED</span>
+                    </div>
+                  </div>
+
+                  <div class="project-info-header">
+                    <h3 class="project-title">Shikai</h3>
+                    <div class="project-live-indicator">
+                      <span class="status-dot"></span>
+                      <span>Live</span>
+                    </div>
+                  </div>
+                  <p class="project-category">Browser Extension</p>
+                  <p class="project-description">
+                    Developer utility companion providing keyboard-driven inspection, quick code sandboxing, and
+                    clipboard sync.
+                  </p>
+                </div>
+                <div class="project-tags-row">
+                  <span class="project-tag-pill">JavaScript</span>
+                  <span class="project-tag-pill">WebExtensions</span>
+                  <span class="project-tag-pill">Tailwind</span>
+                </div>
+              </article>
+            </div>
+
+            <div class="card-actions-row">
+              <span class="section-subtitle">MORE REPOSITORIES ON GITHUB</span>
+              <a class="primary-cta-btn" href="#experience">
+                <span>View Career Timeline</span>
+                <span class="material-symbols-outlined">arrow_forward</span>
+              </a>
+            </div>
+          </section>
+
+          <!-- ───────────────────────────────────────────────────────── -->
+          <!-- SECTION 04: EXPERIENCE                                    -->
+          <!-- ───────────────────────────────────────────────────────── -->
+          <section id="section-experience" class="card-section">
+            <div class="section-headline-group">
+              <div class="section-eyebrow">
+                <span>03 / EXPERIENCE</span>
+                <span class="eyebrow-line"></span>
+                <span>CAREER &amp; MILESTONES</span>
+              </div>
+              <div
+                style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.5rem;">
+                <h2 class="section-title">Where I've been building</h2>
+                <span class="section-subtitle">LVL 48 // SENIOR CAPABILITIES</span>
+              </div>
+            </div>
+
+            <div class="experience-container">
+              <!-- Top Entry / Active Focus -->
+              <div class="experience-hero-panel">
+                <div class="ai-bg-watermark">AI</div>
+                <div class="exp-hero-header">
+                  <div class="exp-role-title">
+                    <span class="material-symbols-outlined"
+                      style="color: var(--vermilion); font-size: 20px;">stars</span>
+                    <span>AI Engineer &amp; Full-Stack Developer · Independent Builder</span>
+                  </div>
+                  <div class="exp-badge-date">
+                    <span class="status-dot" style="background-color: var(--vermilion);"></span>
+                    <span>2026 – Present</span>
+                  </div>
+                </div>
+                <p style="font-size: 14px; line-height: 1.6; color: var(--card-text); position: relative; z-index: 2;">
+                  A continuous journey of mastering modern web architecture and generative AI, moving from foundational
+                  full-stack development to architecting intelligent, scalable multi-agent systems and tactile user
+                  interfaces.
+                </p>
+                <div
+                  style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding-top: 6px; border-top: 1px solid var(--card-border-subtle); position: relative; z-index: 2;">
+                  <span
+                    style="font-family: var(--font-mono); font-size: 10.5px; color: var(--card-text-muted); text-transform: uppercase;">Focus
+                    Areas:</span>
+                  <span class="project-tag-pill">Autonomous Agents</span>
+                  <span class="project-tag-pill">Event-Driven Microservices</span>
+                  <span class="project-tag-pill">Tactile Design Systems</span>
+                  <span class="project-tag-pill">Vector Retrieval (RAG)</span>
+                </div>
+              </div>
+
+              <!-- Timeline Track -->
+              <div class="timeline-track">
+                <div class="timeline-line"></div>
+
+                <!-- Milestone 01 -->
+                <div class="timeline-item">
+                  <div class="timeline-node">
+                    <div class="timeline-pip"></div>
+                  </div>
+                  <div class="timeline-header">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <span class="timeline-phase">PHASE 02</span>
+                      <h3 class="timeline-title">Interactive Systems &amp; Autonomous Workflows</h3>
+                    </div>
+                    <span
+                      style="font-family: var(--font-mono); font-size: 11px; color: var(--card-text-muted);">2025</span>
+                  </div>
+                  <p class="timeline-desc">
+                    Engineered production Next.js &amp; TypeScript applications integrating LLM tool-calling, vector
+                    search with embeddings, and tactile GSAP/Framer animations for enterprise clients.
+                  </p>
+                  <div class="project-tags-row">
+                    <span class="project-tag-pill">Next.js 15</span>
+                    <span class="project-tag-pill">TypeScript</span>
+                    <span class="project-tag-pill">PostgreSQL</span>
+                    <span class="project-tag-pill">Vector DBs</span>
+                  </div>
+                </div>
+
+                <!-- Easter Egg Pixel Cat -->
+                <div class="pixel-cat-easter-egg" title="Meow! Leveling up in the background.">
+                  <div class="pixel-cat-badge">
+                    <svg fill="currentColor" height="18" viewBox="0 0 24 24" width="18">
+                      <path
+                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14.5c0 .28-.22.5-.5.5s-.5-.22-.5-.5v-1c0-.28.22-.5.5-.5s.5.22.5.5v1zm0-3c0 .28-.22.5-.5.5s-.5-.22-.5-.5v-4c0-.28.22-.5.5-.5s.5.22.5.5v4zm3.5 1.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm-8 0c-.83 0-1.5-.67-1.5-1.5S7.67 12 8.5 12s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" />
+                    </svg>
+                  </div>
+                  <span style="font-family: var(--font-mono); font-size: 10px; color: var(--card-text-muted);">COMPANION
+                    SPRITE // LVL UP ACTIVE</span>
+                </div>
+
+                <!-- Milestone 02 -->
+                <div class="timeline-item">
+                  <div class="timeline-node">
+                    <div class="timeline-pip" style="background-color: var(--trainer-gold);"></div>
+                  </div>
+                  <div class="timeline-header">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <span class="timeline-phase" style="color: var(--trainer-gold);">PHASE 01</span>
+                      <h3 class="timeline-title">The Foundation (Locking In)</h3>
+                    </div>
+                    <span style="font-family: var(--font-mono); font-size: 11px; color: var(--card-text-muted);">Q1
+                      2024</span>
+                  </div>
+                  <p class="timeline-desc">
+                    Intensive lock-in on Node.js, Express, PostgreSQL, React, and Tailwind CSS to establish
+                    battle-tested full-stack fundamentals and ship production web tools.
+                  </p>
+                  <div class="project-tags-row">
+                    <span class="project-tag-pill">Node.js</span>
+                    <span class="project-tag-pill">Express</span>
+                    <span class="project-tag-pill">React</span>
+                    <span class="project-tag-pill">Tailwind CSS</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-actions-row">
+              <span class="section-subtitle">CHRONOLOGICAL LOG COMPLETE</span>
+              <a class="primary-cta-btn" href="#blogs">
+                <span>Read Field Notes</span>
+                <span class="material-symbols-outlined">arrow_forward</span>
+              </a>
+            </div>
+          </section>
+
+          <!-- ───────────────────────────────────────────────────────── -->
+          <!-- SECTION 05: BLOGS                                         -->
+          <!-- ───────────────────────────────────────────────────────── -->
+          <section id="section-blogs" class="card-section">
+            <div class="section-headline-group">
+              <div class="section-eyebrow">
+                <span>05 / BLOGS</span>
+                <span class="eyebrow-line"></span>
+                <span>ARCHIVES &amp; FIELD NOTES</span>
+              </div>
+              <div
+                style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.5rem;">
+                <h2 class="section-title">Writing</h2>
+                <span class="section-subtitle">ESSAYS &amp; DECONSTRUCTIONS</span>
+              </div>
+            </div>
+
+            <div class="blogs-list">
+              <!-- BLOG 01 -->
+              <article class="blog-item">
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                  <div class="blog-meta-pills">
+                    <span class="blog-badge-featured">★ LATEST LOG</span>
+                    <span class="blog-date">05 OCT 2026</span>
+                    <span class="blog-read-time">6 MIN READ</span>
+                  </div>
+                  <h3 class="blog-title">How I got my first high-ticket engineering client</h3>
+                  <p class="blog-snippet">
+                    If you're an independent builder, here is the honest, zero-fluff playbook on cold pipelines, niche
+                    positioning, and pricing confidence.
+                  </p>
+                  <div style="display: flex; gap: 6px; margin-top: 4px;">
+                    <span class="project-tag-pill">#ClientAcquisition</span>
+                    <span class="project-tag-pill">#FreelanceArchitecture</span>
+                  </div>
+                </div>
+                <div class="read-log-action">
+                  <span>Read Log</span>
+                  <span class="material-symbols-outlined" style="font-size: 16px;">arrow_forward</span>
+                </div>
+              </article>
+
+              <!-- BLOG 02 -->
+              <article class="blog-item">
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                  <div class="blog-meta-pills">
+                    <span class="blog-date">18 SEP 2026</span>
+                    <span class="blog-read-time">8 MIN READ</span>
+                  </div>
+                  <h3 class="blog-title">Building Tactile 3D Interfaces with Pure Vanilla CSS &amp; WebGL</h3>
+                  <p class="blog-snippet">
+                    Why physics-inspired metaphors and tactile micro-interactions create an emotional bond that flat,
+                    generic SaaS templates will never achieve.
+                  </p>
+                  <div style="display: flex; gap: 6px; margin-top: 4px;">
+                    <span class="project-tag-pill">#DesignSystems</span>
+                    <span class="project-tag-pill">#CreativeWeb</span>
+                  </div>
+                </div>
+                <div class="read-log-action">
+                  <span>Read Log</span>
+                  <span class="material-symbols-outlined" style="font-size: 16px;">arrow_forward</span>
+                </div>
+              </article>
+
+              <!-- BLOG 03 -->
+              <article class="blog-item">
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                  <div class="blog-meta-pills">
+                    <span class="blog-date">28 AUG 2026</span>
+                    <span class="blog-read-time">12 MIN READ</span>
+                  </div>
+                  <h3 class="blog-title">Multi-Agent Architectures: When To Fan-Out and When To Chain</h3>
+                  <p class="blog-snippet">
+                    A deep-dive into orchestrating autonomous LLM swarms without runaway tokens or hallucinated
+                    dependencies.
+                  </p>
+                  <div style="display: flex; gap: 6px; margin-top: 4px;">
+                    <span class="project-tag-pill">#AIEngineering</span>
+                    <span class="project-tag-pill">#AutonomousAgents</span>
+                  </div>
+                </div>
+                <div class="read-log-action">
+                  <span>Read Log</span>
+                  <span class="material-symbols-outlined" style="font-size: 16px;">arrow_forward</span>
+                </div>
+              </article>
+            </div>
+
+            <div class="card-actions-row">
+              <span class="section-subtitle">ARCHIVE ENTRIES 01 - 03</span>
+              <a class="primary-cta-btn" href="#contact">
+                <span>Transmit Direct Message</span>
+                <span class="material-symbols-outlined">arrow_forward</span>
+              </a>
+            </div>
+          </section>
+
+          <!-- ───────────────────────────────────────────────────────── -->
+          <!-- SECTION 06: CONTACT                                       -->
+          <!-- ───────────────────────────────────────────────────────── -->
+          <section id="section-contact" class="card-section">
+            <div class="section-headline-group">
+              <div class="section-eyebrow">
+                <span>06 / CONTACT</span>
+                <span class="eyebrow-line"></span>
+                <span>DIRECT COMM-LINK</span>
+              </div>
+              <div
+                style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.5rem;">
+                <h2 class="section-title">Let's build something unforgettable</h2>
+                <span class="section-subtitle">EST RESPONSE TIME: &lt; 24 HOURS</span>
+              </div>
+            </div>
+
+            <div class="contact-grid">
+              <!-- Form -->
+              <form id="contact-form" class="contact-form-col">
+                <div class="form-group">
+                  <label for="contact-name" class="form-label">TRAINER NAME / CALLSIGN</label>
+                  <input id="contact-name" type="text" class="form-input" placeholder="e.g. Satoshi Nakamoto" required>
+                </div>
+
+                <div class="form-group">
+                  <label for="contact-email" class="form-label">TRANSMISSION FREQUENCY (EMAIL)</label>
+                  <input id="contact-email" type="email" class="form-input" placeholder="e.g. trainer@domain.dev"
+                    required>
+                </div>
+
+                <div class="form-group">
+                  <label for="contact-message" class="form-label">BRIEFING PAYLOAD</label>
+                  <textarea id="contact-message" rows="4" class="form-textarea"
+                    placeholder="Tell me about your project, timeline, and vision..." required></textarea>
+                </div>
+
+                <button type="submit" class="primary-cta-btn" style="align-self: flex-start; margin-top: 4px;">
+                  <span class="material-symbols-outlined">send</span>
+                  <span>Transmit Transmission</span>
+                </button>
+              </form>
+
+              <!-- Coordinates Info -->
+              <div class="contact-info-col">
+                <div class="contact-meta-row">
+                  <span class="contact-meta-title">COORDINATES</span>
+                  <span class="contact-meta-val">Pune, Maharashtra, India</span>
+                </div>
+
+                <div class="contact-meta-row">
+                  <span class="contact-meta-title">PRIMARY INBOX</span>
+                  <a href="mailto:rohitdare97@gmail.com" class="contact-meta-val">rohitdare97@gmail.com</a>
+                </div>
+
+                <div class="contact-meta-row">
+                  <span class="contact-meta-title">COMMUNICATION CHANNELS</span>
+                  <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 2px;">
+                    <a href="https://github.com/Rohitdare" target="_blank" rel="noopener noreferrer" class="social-link">
+                      <span>github.com/Rohitdare</span>
+                      <span class="material-symbols-outlined">arrow_outward</span>
+                    </a>
+                    <a href="https://x.com/rohit_dev" target="_blank" rel="noopener noreferrer" class="social-link">
+                      <span>x.com/rohit_dev</span>
+                      <span class="material-symbols-outlined">arrow_outward</span>
+                    </a>
+                    <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="social-link">
+                      <span>linkedin.com/in/rohit</span>
+                      <span class="material-symbols-outlined">arrow_outward</span>
+                    </a>
+                  </div>
+                </div>
+
+                <div class="contact-meta-row"
+                  style="margin-top: auto; padding-top: 8px; border-top: 1px solid var(--card-border-subtle);">
+                  <span class="contact-meta-title">SECURITY CLEARANCE</span>
+                  <span style="font-family: var(--font-mono); font-size: 10px; color: var(--status-live);">PGP_KEY:
+                    0x8429_F9B3_VERIFIED</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+        </div> <!-- /card-section-container -->
+
+      </article> <!-- /trainer-card -->
+    </div> <!-- /card-3d-wrapper -->
+
+  </main>
+
+  <!-- Toast Notice -->
+  <div id="toast-notice" class="toast-notice" role="alert">
+    <span class="material-symbols-outlined" style="font-size: 18px; color: var(--vermilion);">terminal</span>
+    <span class="toast-text">TRANSMISSION RECEIVED</span>
+  </div>
+
+
+
+  <!-- Scripts -->
+  <script src="dot-grid-bg.js"></script>
+  <script src="main.js"></script>
+</body>
+
+</html>
