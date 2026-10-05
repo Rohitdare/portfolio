@@ -304,10 +304,10 @@
       console.warn('Live GitHub fetch failed, attempting local fallback:', err);
     }
 
-    // 2. Fall back to local github-contributions.json if live fetch failed
+    // 2. Fall back to local data/github-contributions.json if live fetch failed
     if (!data || !Array.isArray(data.contributions)) {
       try {
-        const localRes = await fetch('github-contributions.json');
+        const localRes = await fetch('data/github-contributions.json');
         if (localRes.ok) {
           data = await localRes.json();
         }

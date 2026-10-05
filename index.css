@@ -2072,3 +2072,57 @@ html.light .nav-pill-bar {
     font-size: 10px;
   }
 }
+
+/* ── Oneko Desktop Companion ──────────────────────────────── */
+#oneko {
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  touch-action: none;
+}
+
+#oneko:active,
+#oneko.dragging {
+  cursor: grabbing !important;
+}
+
+.oneko-balloon {
+  position: fixed;
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--vermilion, #E63946);
+  background: rgba(22, 22, 24, 0.95);
+  border: 1px solid var(--stage-border, #3E3D40);
+  border-radius: 4px;
+  padding: 3px 8px;
+  pointer-events: none;
+  transform: translate(-50%, -100%);
+  margin-top: -6px;
+  z-index: 2147483647;
+  white-space: nowrap;
+  letter-spacing: 0.05em;
+  animation: onekoPop 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+html.light .oneko-balloon {
+  background: rgba(255, 253, 248, 0.95);
+  color: #B5232F;
+  border-color: #D5CBB9;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+}
+
+@keyframes onekoPop {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -70%) scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -100%) scale(1);
+  }
+}
