@@ -4,7 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rohit — Software Developer | Trainer ID Portfolio</title>
+  <title>Rohit Dare — Software Developer | AI</title>
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
   <meta name="description"
     content="Trainer ID Developer Portfolio of Rohit — Full-Stack Developer & AI Engineer. Features an immersive 3D suspended badge interface, battle-tested tech stack, shipped artifacts, and career timeline.">
 
@@ -33,24 +34,12 @@
   <!-- Ambient Glow -->
   <div class="ambient-glow" aria-hidden="true"></div>
 
-  <!-- ═══════════════════════════════════════════════════════════ -->
-  <!-- LEVEL 1: DEDICATED GIF ARTWORK LAYER                        -->
-  <!-- ═══════════════════════════════════════════════════════════ -->
-  <div class="gif-artwork-layer" aria-hidden="true">
-    <img src="assets/katana.gif" alt="Katana Manga Artwork" class="gif-artwork-img" onerror="this.onerror=null; this.src='assets/katana-manga.png';">
-  </div>
 
   <!-- ═══════════════════════════════════════════════════════════ -->
   <!-- FIXED HEADER / NAVIGATION                                  -->
   <!-- ═══════════════════════════════════════════════════════════ -->
   <header class="app-header">
     <div class="header-left">
-      <!-- Pokeball Capsule -->
-      <div class="trainer-capsule" title="Trainer League Indicators">
-        <div class="pokeball-pip" title="Pokeball 01"></div>
-        <div class="pokeball-pip" title="Pokeball 02"></div>
-        <div class="pokeball-pip" title="Pokeball 03"></div>
-      </div>
 
       <!-- Live IST Clock with Emerald Beacon -->
       <div class="time-beacon">
@@ -75,12 +64,7 @@
       </nav>
     </div>
 
-    <div class="header-right">
-      <!-- Nav Avatar Icon -->
-      <div class="nav-avatar-btn" title="Trainer Rohit">
-        <span class="material-symbols-outlined" style="font-size: 18px;">person</span>
-      </div>
-    </div>
+    <div class="header-right"></div>
   </header>
 
   <!-- ═══════════════════════════════════════════════════════════ -->
@@ -97,6 +81,11 @@
   <!-- MAIN 3D STAGE & SUSPENDED TRAINER ID BADGE                  -->
   <!-- ═══════════════════════════════════════════════════════════ -->
   <main class="main-stage">
+
+    <!-- LEVEL 1: DEDICATED GIF ARTWORK LAYER (Anchored to Hero Stage) -->
+    <div class="gif-artwork-layer" aria-hidden="true">
+      <img src="assets/katana.gif" alt="Katana Manga Artwork" class="gif-artwork-img" onerror="this.onerror=null; this.src='assets/katana-manga.png';">
+    </div>
 
     <!-- SUSPENDED LANYARD MECHANISM -->
     <div id="lanyard-assembly" class="lanyard-assembly badge-entering">
@@ -159,15 +148,12 @@
               <div class="avatar-frame-wrapper">
                 <div class="avatar-frame">
                   <img src="assets/avatar.png" alt="Rohit Portrait" class="avatar-image">
-                  <div class="avatar-holo-stamp">GEN 09</div>
                 </div>
-                <div class="avatar-corner-stamp" title="Rohit Master Rank">R</div>
               </div>
 
               <div class="bio-lockup">
                 <div class="name-level-header">
                   <h1 class="hero-name">ROHIT</h1>
-                  <span class="level-tag">LVL. 99 MASTER</span>
                 </div>
                 <h2 class="hero-role">Software Developer</h2>
                 <div class="trainer-accent-bar"></div>
@@ -202,7 +188,7 @@
                 <p class="quote-content">If we don't fight, we can't win.</p>
                 <span class="quote-author">— Eren Yeager</span>
               </div>
-              <span class="kanji-watermark">戦え</span>
+              <span class="kanji-watermark" title="戦え (Tatakae) — 'Fight!' // Eren Yeager (Attack on Titan)">戦え</span>
             </div>
 
             <!-- GitHub Contribution Matrix -->
@@ -954,6 +940,51 @@
     </div> <!-- /card-3d-wrapper -->
 
   </main>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- FINAL BATTLE SECTION (Anime Climax / End Screen)           -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <section id="final-battle" class="final-battle-section" aria-label="Final Battle Climax Screen">
+    <!-- Atmospheric Ambient Glow behind fight scene -->
+    <div class="battle-atmospheric-glow" aria-hidden="true"></div>
+
+    <!-- Floating Embers / Sparks -->
+    <div class="battle-sparks-container" aria-hidden="true">
+      <span class="battle-spark s1"></span>
+      <span class="battle-spark s2"></span>
+      <span class="battle-spark s3"></span>
+      <span class="battle-spark s4"></span>
+      <span class="battle-spark s5"></span>
+      <span class="battle-spark s6"></span>
+    </div>
+
+    <!-- Inner Cinematic Framing -->
+    <div class="battle-stage-frame">
+      <!-- Center Hero Sprite Visual -->
+      <div class="battle-sprite-wrapper">
+        <div class="battle-sprite-aura" aria-hidden="true"></div>
+        <img src="assets/naruto.gif" alt="Naruto vs Sasuke Anime Final Battle Scene" class="battle-sprite-img" loading="lazy">
+        <div class="battle-ground-shadow" aria-hidden="true"></div>
+      </div>
+
+      <!-- Narrative Tagline & Action CTAs -->
+      <div class="battle-content-block">
+        <p class="battle-subtext">Still building. Still learning. Still shipping.</p>
+
+        <!-- Action CTAs -->
+        <div class="battle-cta-row">
+          <a href="https://github.com/Rohitdare" target="_blank" rel="noopener noreferrer" class="battle-btn battle-btn-primary">
+            <span class="material-symbols-outlined" style="font-size: 16px;">code</span>
+            <span>View GitHub</span>
+          </a>
+          <a href="#contact" id="battle-contact-btn" class="battle-btn battle-btn-secondary">
+            <span class="material-symbols-outlined" style="font-size: 16px;">send</span>
+            <span>Contact Me</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- Toast Notice -->
   <div id="toast-notice" class="toast-notice" role="alert">

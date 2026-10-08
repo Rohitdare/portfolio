@@ -202,13 +202,29 @@
     if (container) {
       container.scrollTop = 0;
     }
+
+    // Smoothly scroll window to top stage view when navigating sections
+    if (window.scrollY > 100) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }
 
-  // Forward mouse wheel scrolling to the active section container from anywhere
+  // Smart wheel scroll forwarding:
+  // If cursor is over the trainer card and card can scroll internally, scroll card.
+  // Otherwise, allow window to scroll naturally down to the final battle section.
   window.addEventListener('wheel', (e) => {
     const container = document.querySelector('.card-section-container');
-    if (container) {
-      container.scrollTop += e.deltaY;
+    if (!container) return;
+
+    const isOverCard = e.target && e.target.closest && e.target.closest('#trainer-card');
+    if (isOverCard) {
+      const maxScroll = container.scrollHeight - container.clientHeight;
+      const canScrollDown = e.deltaY > 0 && container.scrollTop < maxScroll - 2;
+      const canScrollUp = e.deltaY < 0 && container.scrollTop > 2;
+
+      if (canScrollDown || canScrollUp) {
+        container.scrollTop += e.deltaY;
+      }
     }
   }, { passive: true });
 
@@ -228,7 +244,7 @@
     navigateToSection(hash);
   });
 
-  // Delegate clicks on internal CTA buttons that link to sections (e.g. #stack)
+  // Delegate clicks on internal CTA buttons that link to sections (e.g. #stack, #contact)
   document.addEventListener('click', (e) => {
     const targetLink = e.target.closest('a[href^="#"]');
     if (targetLink) {
@@ -241,6 +257,44 @@
       }
     }
   });
+
+  /* ── Final Battle Section Viewport Observer & Scroll Handlers ── */
+  const finalBattleSection = document.getElementById('final-battle');
+  if (finalBattleSection) {
+    if ('IntersectionObserver' in window) {
+      const battleObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            finalBattleSection.classList.add('in-view');
+            document.body.classList.add('battle-mode');
+          } else {
+            if (entry.boundingClientRect.top > window.innerHeight * 0.3) {
+              document.body.classList.remove('battle-mode');
+            }
+          }
+        });
+      }, {
+        threshold: 0.15,
+        rootMargin: '0px 0px -40px 0px'
+      });
+      battleObserver.observe(finalBattleSection);
+    } else {
+      finalBattleSection.classList.add('in-view');
+    }
+  }
+
+  // Fade out hero background art when scrolling down away from hero stage
+  window.addEventListener('scroll', () => {
+    const isScrolled = window.scrollY > 40;
+    document.body.classList.toggle('scrolled-past-hero', isScrolled);
+  }, { passive: true });
+
+  const battleContactBtn = document.getElementById('battle-contact-btn');
+  if (battleContactBtn) {
+    battleContactBtn.addEventListener('click', () => {
+      playBeep(640, 0.08, 'triangle');
+    });
+  }
 
   /* ── Live IST Clock (UTC + 5:30) ─────────────────────────── */
   function updateISTClock() {
@@ -430,14 +484,6 @@
   }
   initTheme();
 
-  /* ── Pokeball Interactive Easter Egg ──────────────────────── */
-  const pokeballs = document.querySelectorAll('.pokeball-pip');
-  pokeballs.forEach((ball, idx) => {
-    ball.addEventListener('click', () => {
-      playBeep(520 + idx * 120, 0.08, 'sine');
-      showToast(`POKEBALL #${idx + 1} ACTIVATED // BATTLE READY`);
-    });
-  });
 
   /* ── Contact Form Submission & Toast ──────────────────────── */
   function showToast(message) {

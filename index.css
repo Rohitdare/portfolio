@@ -88,9 +88,18 @@ html.light {
 }
 
 /* ── Base Styles ───────────────────────────────────────────── */
-html, body {
+html {
   width: 100%;
   height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+body {
+  width: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
   background-color: var(--stage-bg);
   color: var(--card-text);
   font-family: var(--font-body);
@@ -98,8 +107,8 @@ html, body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow: hidden;
   transition: background-color 0.4s ease;
+  position: relative;
 }
 
 ::selection {
@@ -144,7 +153,7 @@ html, body {
 
 /* ── Level 1: Dedicated GIF Artwork Layer ───────────────────── */
 .gif-artwork-layer {
-  position: fixed;
+  position: absolute;
   right: 1.5rem;
   bottom: 1.25rem;
   width: 440px;
@@ -157,8 +166,17 @@ html, body {
   align-items: center;
   justify-content: center;
   opacity: 0.65;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s ease;
   isolation: isolate;
+  -webkit-mask-image: linear-gradient(to bottom, black 55%, transparent 98%);
+  mask-image: linear-gradient(to bottom, black 55%, transparent 98%);
+}
+
+body.scrolled-past-hero .gif-artwork-layer,
+body.battle-mode .gif-artwork-layer {
+  opacity: 0 !important;
+  pointer-events: none;
+  transform: translateY(-16px);
 }
 
 html.light .gif-artwork-layer {
@@ -419,6 +437,13 @@ html.light .nav-pill-bar {
   gap: 8px;
   z-index: 40;
   pointer-events: none;
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s ease;
+}
+
+body.battle-mode .telemetry-hud {
+  opacity: 0 !important;
+  pointer-events: none;
+  transform: translateY(-50%) translateX(16px);
 }
 
 .telemetry-index {
@@ -449,29 +474,24 @@ html.light .nav-pill-bar {
 
 /* ── 3D Card Stage & Suspension Lanyard ─────────────────────── */
 .main-stage {
-  position: fixed;
-  inset: 0;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  position: relative;
   z-index: 20; /* LEVEL 2 & 3: 3D Stage & Suspended ID Card */
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   padding-top: 0;
-  padding-bottom: 1rem;
+  padding-bottom: 2.5rem;
   perspective: 1400px;
-  overflow: hidden;
+  overflow: visible;
   pointer-events: none;
 }
 
 /* Suspended Lanyard Assembly — VISUALLY ORIGINATING FROM NAVBAR TOP/CENTER */
 .lanyard-assembly {
-  position: fixed;
+  position: absolute;
   top: 18px; /* Starts behind the navbar pill */
   left: 0;
   right: 0;
@@ -576,11 +596,13 @@ html.light .nav-pill-bar {
 
 /* ── 3D Card Shell Wrapper ─────────────────────────────────── */
 .card-3d-wrapper {
-  position: fixed;
-  top: 118px;
+  position: relative;
+  margin-top: 118px;
+  margin-bottom: 2.5rem;
   left: 0;
   right: 0;
-  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
   width: 100%;
   max-width: var(--card-max-width);
   z-index: 35; /* FOREGROUND: in front of lanyard assembly */
@@ -1078,14 +1100,25 @@ html.light .nav-pill-bar {
 
 .kanji-watermark {
   position: absolute;
-  right: 0.25rem;
-  bottom: -0.35rem;
-  font-size: 3rem;
+  right: 0.65rem;
+  bottom: -0.2rem;
+  font-family: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", "MS Mincho", serif, sans-serif;
+  font-size: 3.15rem;
   font-weight: 900;
-  color: var(--card-border);
-  opacity: 0.35;
+  color: var(--vermilion);
+  opacity: 0.42;
+  letter-spacing: 0.06em;
   user-select: none;
-  pointer-events: none;
+  pointer-events: auto;
+  line-height: 1;
+  transition: opacity 0.25s ease, transform 0.25s ease, filter 0.25s ease;
+  cursor: help;
+}
+
+.quote-card:hover .kanji-watermark {
+  opacity: 0.85;
+  transform: translateY(-2px) scale(1.03);
+  filter: drop-shadow(0 2px 8px rgba(230, 57, 70, 0.25));
 }
 
 /* Heatmap Panel — Significantly Compact (~35% height reduction) */
@@ -2126,3 +2159,456 @@ html.light .oneko-balloon {
     transform: translate(-50%, -100%) scale(1);
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   FINAL BATTLE / END SCREEN — CINEMATIC CLIMAX SECTION
+   ═══════════════════════════════════════════════════════════════ */
+.final-battle-section {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin-top: 15vh;
+  background: transparent;
+  border: none;
+  border-top: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1.5rem;
+  overflow: hidden;
+  z-index: 25;
+  isolation: isolate;
+  scroll-margin-top: 0;
+}
+
+html.light .final-battle-section {
+  background: transparent;
+  border: none;
+  border-top: none;
+}
+
+/* Background overlay with subtle scanlines (disabled for seamless canvas flow) */
+.battle-bg-overlay {
+  display: none;
+}
+
+/* Atmospheric Glow Behind Fight Scene */
+.battle-atmospheric-glow {
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 620px;
+  height: 380px;
+  max-width: 95vw;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(230, 57, 70, 0.28) 0%,
+    rgba(242, 184, 75, 0.12) 35%,
+    rgba(230, 57, 70, 0.04) 65%,
+    transparent 80%
+  );
+  filter: blur(50px);
+  pointer-events: none;
+  z-index: 2;
+  transition: opacity 1.2s ease, transform 1.2s ease;
+}
+
+/* Floating embers/sparks */
+.battle-sparks-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.battle-spark {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--vermilion);
+  box-shadow: 0 0 8px var(--vermilion), 0 0 12px var(--trainer-gold);
+  opacity: 0;
+  animation: sparkRise 4s infinite linear;
+}
+
+.battle-spark.s1 { left: 35%; bottom: 20%; animation-delay: 0.2s; animation-duration: 4.2s; }
+.battle-spark.s2 { left: 48%; bottom: 25%; animation-delay: 1.4s; animation-duration: 3.8s; width: 4px; height: 4px; background: var(--trainer-gold); }
+.battle-spark.s3 { left: 62%; bottom: 18%; animation-delay: 2.1s; animation-duration: 4.5s; }
+.battle-spark.s4 { left: 42%; bottom: 30%; animation-delay: 2.8s; animation-duration: 3.5s; }
+.battle-spark.s5 { left: 55%; bottom: 22%; animation-delay: 0.9s; animation-duration: 4.8s; width: 2.5px; height: 2.5px; }
+.battle-spark.s6 { left: 68%; bottom: 28%; animation-delay: 3.2s; animation-duration: 4.1s; }
+
+@keyframes sparkRise {
+  0% { transform: translateY(0) scale(0.6); opacity: 0; }
+  25% { opacity: 0.85; }
+  75% { opacity: 0.6; }
+  100% { transform: translateY(-160px) scale(0.2); opacity: 0; }
+}
+
+/* Framing Container */
+.battle-stage-frame {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  z-index: 10;
+  gap: 1.5rem;
+}
+
+/* Top Tactical HUD Bar */
+.battle-hud-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 640px;
+  padding: 0 1rem;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--card-text-muted);
+  letter-spacing: 0.08em;
+  opacity: 0.85;
+}
+
+.battle-hud-tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hud-pip {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--vermilion);
+  box-shadow: 0 0 8px var(--vermilion);
+  animation: pulse-beacon 1.8s infinite ease-in-out;
+}
+
+.battle-hud-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(230, 57, 70, 0.4), transparent);
+  margin: 0 1.25rem;
+}
+
+.battle-hud-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-indicator-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--status-live);
+  box-shadow: 0 0 6px var(--status-live);
+}
+
+.hud-status-badge {
+  color: var(--trainer-gold);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+/* Center Hero Sprite Visual */
+.battle-sprite-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0.5rem 0;
+  width: 100%;
+  max-width: 520px;
+}
+
+.battle-sprite-aura {
+  position: absolute;
+  width: 110%;
+  height: 110%;
+  background: radial-gradient(ellipse at center, rgba(230, 57, 70, 0.22) 0%, transparent 70%);
+  filter: blur(28px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.battle-sprite-img {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  max-width: 480px;
+  height: auto;
+  aspect-ratio: 2 / 1;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  filter: drop-shadow(0 14px 30px rgba(0, 0, 0, 0.65)) drop-shadow(0 0 20px rgba(230, 57, 70, 0.25));
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
+  user-select: none;
+}
+
+.battle-sprite-wrapper:hover .battle-sprite-img {
+  transform: translateY(-4px) scale(1.02);
+  filter: drop-shadow(0 18px 36px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 28px rgba(230, 57, 70, 0.45));
+}
+
+.battle-ground-shadow {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 75%;
+  height: 14px;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.75) 0%, rgba(230, 57, 70, 0.2) 40%, transparent 75%);
+  filter: blur(4px);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Typography & Content Block */
+.battle-content-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+  max-width: 680px;
+}
+
+.battle-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--vermilion);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.eyebrow-kanji {
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  color: var(--trainer-gold);
+}
+
+.eyebrow-dash {
+  opacity: 0.4;
+}
+
+.battle-heading {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3.8vw, 2.4rem);
+  font-weight: 800;
+  color: #FFFFFF;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  margin: 0;
+  line-height: 1.2;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8), 0 0 30px rgba(230, 57, 70, 0.35);
+}
+
+html.light .battle-heading {
+  color: #141414;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.battle-subtext {
+  font-family: var(--font-mono);
+  font-size: clamp(11.5px, 2vw, 13.5px);
+  color: var(--card-text-muted);
+  letter-spacing: 0.05em;
+  margin-top: 2px;
+}
+
+/* Call to Action Buttons */
+.battle-cta-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.battle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: 9999px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.battle-btn-primary {
+  background: var(--vermilion);
+  color: #FFFFFF;
+  border: 1px solid var(--vermilion);
+}
+
+.battle-btn-primary:hover {
+  background: var(--vermilion-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px var(--vermilion-glow);
+}
+
+.battle-btn-secondary {
+  background: rgba(26, 26, 28, 0.85);
+  color: #E5E2E3;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+html.light .battle-btn-secondary {
+  background: rgba(255, 255, 255, 0.9);
+  color: #141414;
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+.battle-btn-secondary:hover {
+  background: rgba(38, 38, 42, 0.95);
+  border-color: var(--trainer-gold);
+  color: var(--trainer-gold);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Bottom HUD Telemetry Line */
+.battle-hud-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 480px;
+  margin-top: 1rem;
+  gap: 1rem;
+}
+
+.battle-hud-line-left,
+.battle-hud-line-right {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--stage-border));
+}
+
+.battle-hud-line-right {
+  background: linear-gradient(90deg, var(--stage-border), transparent);
+}
+
+.battle-hud-counter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.counter-num {
+  font-weight: 700;
+  color: var(--trainer-gold);
+  letter-spacing: 0.1em;
+}
+
+.counter-label {
+  font-size: 9px;
+  color: var(--card-text-muted);
+  letter-spacing: 0.12em;
+}
+
+/* ── Entrance Animation States ────────────────────────────── */
+.final-battle-section .battle-stage-frame > * {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.final-battle-section .battle-hud-top {
+  transition-delay: 0.1s;
+}
+
+.final-battle-section .battle-sprite-wrapper {
+  transition-delay: 0.25s;
+}
+
+.final-battle-section .battle-content-block {
+  transition-delay: 0.4s;
+}
+
+.final-battle-section .battle-hud-bottom {
+  transition-delay: 0.55s;
+}
+
+.final-battle-section.in-view .battle-stage-frame > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Responsive Adaptations ────────────────────────────────── */
+@media (max-width: 768px) {
+  .final-battle-section {
+    min-height: 100vh;
+    min-height: 100dvh;
+    margin-top: 10vh;
+    padding: 3.5rem 1.25rem;
+  }
+  .battle-sprite-img {
+    max-width: 380px;
+  }
+  .battle-heading {
+    font-size: 1.65rem;
+  }
+  .battle-hud-top {
+    font-size: 9.5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .final-battle-section {
+    min-height: 100vh;
+    min-height: 100dvh;
+    margin-top: 8vh;
+    padding: 2.5rem 1rem;
+  }
+  .battle-sprite-img {
+    max-width: 300px;
+  }
+  .battle-heading {
+    font-size: 1.35rem;
+  }
+  .battle-cta-row {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.65rem;
+  }
+  .battle-btn {
+    width: 100%;
+  }
+  .battle-hud-top {
+    flex-direction: column;
+    gap: 4px;
+  }
+  .battle-hud-line {
+    display: none;
+  }
+}
+
