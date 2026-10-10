@@ -72,8 +72,28 @@
     if (lanyardAssembly) lanyardAssembly.classList.remove('badge-entering');
   }, 1350);
 
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
   function updateCardOrientation() {
     if (isEntering) {
+      requestAnimationFrame(updateCardOrientation);
+      return;
+    }
+
+    if (document.hidden) {
+      requestAnimationFrame(updateCardOrientation);
+      return;
+    }
+
+    if (prefersReducedMotion.matches) {
+      if (cardWrapper) cardWrapper.style.transform = 'none';
+      if (lanyardAssembly) lanyardAssembly.style.transform = 'none';
+      requestAnimationFrame(updateCardOrientation);
+      return;
+    }
+
+    // Skip orientation updates when the hero stage is scrolled off screen
+    if (window.scrollY > window.innerHeight * 1.2) {
       requestAnimationFrame(updateCardOrientation);
       return;
     }

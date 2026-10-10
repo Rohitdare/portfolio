@@ -18,6 +18,34 @@ Each entry records:
 
 ## Entry History
 
+### [2026-10-10 20:45 IST] — Fix Unwanted Hover Tooltips & Polish Animations
+- **Author / Agent:** Antigravity AI
+- **Task:** Eliminate unwanted black browser tooltip rectangles appearing when hovering over Oneko cat, Japanese kanji watermark, pixel cat, and theme toggle. Polish card hover animations, background dot grid rendering, loop lifecycle, and implement full `prefers-reduced-motion` accessibility.
+- **Files Modified:**
+  - `oneko.js`:
+    - Removed `nekoEl.title` attribute causing native black tooltip popups.
+    - Added accessible `aria-label` attribute on `nekoEl`.
+    - Added `document.hidden` check in `onAnimationFrame` to pause rendering when tab is inactive.
+    - Added `prefers-reduced-motion` check to keep cat peacefully resting when reduced motion is preferred.
+  - `index.html`:
+    - Removed `title` from `<button id="theme-toggle">` (retaining `aria-label`).
+    - Replaced `title` on `<span class="kanji-watermark">` with accessible `aria-label` and `role="img"`.
+    - Replaced `title` on `<div class="pixel-cat-easter-egg">` with accessible `aria-label` and `role="img"`.
+  - `main.js`:
+    - Optimized `updateCardOrientation`: added `prefersReducedMotion` check, `document.hidden` pause, and scroll bounds check to stop updating 3D tilt when hero stage is scrolled off-screen.
+  - `dot-grid-bg.js`:
+    - Added idle sleep/wake logic: canvas loop goes to sleep after pointer leaves and decay finishes, saving CPU/GPU cycles until next cursor movement.
+    - Added visibility change handler and theme change observer.
+    - Respected `prefers-reduced-motion` by disabling revolving orbit motion when requested.
+  - `index.css`:
+    - Replaced abrupt card transitions with smooth `cubic-bezier(0.16, 1, 0.3, 1)` easing.
+    - Added `@keyframes sectionReveal` on `.card-section.active` for seamless tab switching.
+    - Added comprehensive `@media (prefers-reduced-motion: reduce)` block to disable unnecessary keyframes and large transforms.
+- **Verification:** Verified complete elimination of native tooltips on affected elements while preserving accessibility; verified animation smoothness, loop idling, and reduced-motion behavior.
+- **Status:** Complete & verified.
+
+---
+
 ### [2026-10-09 00:38 IST] — Shift Final Battle Section Downwards for Full Viewport Clearance
 - **Author / Agent:** Antigravity AI
 - **Task:** Shift the final battle section downwards with `min-height: 100vh; min-height: 100dvh;` and `margin-top: 15vh;` so that upon scrolling down, the entire upper hero stage (trainer badge, lanyard, katana graphic, and telemetry index) is completely scrolled off-screen and not visible.

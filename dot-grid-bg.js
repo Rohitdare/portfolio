@@ -74,11 +74,22 @@
   window.addEventListener("resize", resize);
   resize();
 
+  let isLoopRunning = false;
+  const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  function wakeLoop() {
+    if (!isLoopRunning) {
+      isLoopRunning = true;
+      requestAnimationFrame(loop);
+    }
+  }
+
   /* ── Window-wide pointer events so dots react across the page ─ */
   window.addEventListener("mousemove", (e) => {
     mouse.x = e.clientX;
     mouse.y = e.clientY;
     hovering = true;
+    wakeLoop();
   });
 
   document.addEventListener("mouseleave", () => {
@@ -95,6 +106,7 @@
       mouse.x = t.clientX;
       mouse.y = t.clientY;
       hovering = true;
+      wakeLoop();
     }
   }, { passive: true });
 
@@ -105,9 +117,25 @@
     leaveTs = performance.now();
   });
 
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) {
+      wakeLoop();
+    }
+  });
+
+  // Re-render when theme changes
+  const themeObserver = new MutationObserver(() => {
+    wakeLoop();
+  });
+  themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+
   /* ── Render loop ─────────────────────────────────────────── */
   function loop(ts) {
-    requestAnimationFrame(loop);
+    if (document.hidden) {
+      isLoopRunning = false;
+      return;
+    }
+
     const dt = Math.min((ts - (prevTs || ts)) / 1000, 0.05);
     prevTs = ts;
 
@@ -142,7 +170,7 @@
         cg = Math.round(restColor.g + (hoverColor.g - restColor.g) * inf);
         cb = Math.round(restColor.b + (hoverColor.b - restColor.b) * inf);
 
-        if (CFG.enableRevolve) {
+        if (CFG.enableRevolve && (!prefersReducedMotion || !prefersReducedMotion.matches)) {
           const orbitR = (1 - t) * CFG.dotSpacing * 0.75 * inf;
           const theta = globalAngle * d.speedMult + d.phase;
 
@@ -176,7 +204,16 @@
       ctx.fillStyle = `rgba(${cr},${cg},${cb},${alpha})`;
       ctx.fill();
     }
+
+    // When completely idle and decay settled, sleep until next pointer move
+    if (!hovering && decay <= 0.001) {
+      isLoopRunning = false;
+      return;
+    }
+
+    requestAnimationFrame(loop);
   }
 
-  requestAnimationFrame(loop);
+  // Initial draw
+  wakeLoop();
 })();

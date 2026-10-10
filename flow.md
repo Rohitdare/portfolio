@@ -93,7 +93,7 @@ graph TD
 | :--- | :--- | :--- | :--- | :--- |
 | `initCanvas()` | `dot-grid-bg.js:28` | Window load & resize | `#dot-grid-canvas` | Scales canvas to `window.innerWidth` & `innerHeight` accounting for device pixel ratio (`window.devicePixelRatio`). |
 | `createGrid()` | `dot-grid-bg.js:52` | Window resize | Memory dot array | Populates a 2D matrix of dot points spaced 32px apart across the viewport. |
-| `draw()` | `dot-grid-bg.js:90` | `requestAnimationFrame` | Canvas 2D context | Computes cursor gravity distance; displaces dots away from mouse pointer with elastic return spring physics. |
+| `loop(ts)` & `wakeLoop()` | `dot-grid-bg.js:109` | Mouse/touch movement, visibility change | Canvas 2D context | Computes cursor gravity distance; blends hover colors with smooth decay; pauses loop when idle or tab is hidden; respects reduced motion. |
 
 ---
 

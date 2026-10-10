@@ -202,7 +202,7 @@
     }
 
     nekoEl.id = "oneko";
-    nekoEl.title = "Oneko 🐾 // Drag to place • Click to sleep / wake";
+    nekoEl.setAttribute("aria-label", "Oneko desktop cat companion. Drag to place, click to sleep or wake.");
     nekoEl.setAttribute("role", "button");
     nekoEl.setAttribute("tabindex", "0");
     nekoEl.style.width = "32px";
@@ -368,6 +368,11 @@
   function onAnimationFrame(timestamp) {
     if (!nekoEl.isConnected) return;
 
+    if (document.hidden) {
+      window.requestAnimationFrame(onAnimationFrame);
+      return;
+    }
+
     if (!lastFrameTimestamp) {
       lastFrameTimestamp = timestamp;
     }
@@ -442,6 +447,12 @@
       setSprite("sleeping", Math.floor(idleAnimationFrame / 4));
       nekoEl.style.left = `${nekoPosX - 16}px`;
       nekoEl.style.top = `${nekoPosY - 16}px`;
+      return;
+    }
+
+    // Respect reduced motion preference by resting quietly in place
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      idle();
       return;
     }
 
