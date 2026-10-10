@@ -227,6 +227,8 @@
     if (window.scrollY > 100) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+
+    updateScrollArrowState();
   }
 
   // Smart wheel scroll forwarding:
@@ -308,6 +310,54 @@
     const isScrolled = window.scrollY > 40;
     document.body.classList.toggle('scrolled-past-hero', isScrolled);
   }, { passive: true });
+
+  /* ── Minimal Bottom-Left Scroll Navigation Arrow ───────────── */
+  const scrollNavArrow = document.getElementById('scroll-nav-arrow');
+
+  function updateScrollArrowState() {
+    if (!scrollNavArrow) return;
+    const isAtBottom = window.scrollY > window.innerHeight * 0.4 || document.body.classList.contains('battle-mode');
+    if (isAtBottom) {
+      scrollNavArrow.classList.add('pointing-up');
+      scrollNavArrow.setAttribute('aria-label', 'Scroll back to top (Home)');
+    } else {
+      scrollNavArrow.classList.remove('pointing-up');
+      const nextIdx = currentSectionIndex + 1;
+      const nextName = nextIdx < SECTIONS.length ? SECTIONS[nextIdx] : 'final battle';
+      scrollNavArrow.setAttribute('aria-label', `Navigate to next section (${nextName})`);
+    }
+  }
+
+  if (scrollNavArrow) {
+    scrollNavArrow.addEventListener('click', () => {
+      playBeep(520, 0.05, 'triangle');
+      const isAtBottom = window.scrollY > window.innerHeight * 0.4 || document.body.classList.contains('battle-mode');
+
+      if (isAtBottom) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.location.hash = 'home';
+        navigateToSection('home');
+      } else {
+        if (currentSectionIndex < SECTIONS.length - 1) {
+          const nextSec = SECTIONS[currentSectionIndex + 1];
+          window.location.hash = nextSec;
+          navigateToSection(nextSec);
+        } else {
+          // At final card section ('contact'), scroll down to final battle section
+          const finalBattle = document.getElementById('final-battle');
+          if (finalBattle) {
+            finalBattle.scrollIntoView({ behavior: 'smooth' });
+          } else {
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+          }
+        }
+      }
+      setTimeout(updateScrollArrowState, 350);
+    });
+
+    window.addEventListener('scroll', updateScrollArrowState, { passive: true });
+    updateScrollArrowState();
+  }
 
   const battleContactBtn = document.getElementById('battle-contact-btn');
   if (battleContactBtn) {

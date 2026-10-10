@@ -18,6 +18,23 @@ Each entry records:
 
 ## Entry History
 
+### [2026-10-10 21:15 IST] — Minimal Bottom-Left Scroll Navigation Arrow
+- **Author / Agent:** Antigravity AI
+- **Task:** Add a small, polished scroll-down arrow button in the bottom-left corner of the viewport complementing the Trainer ID card design, with sequential section step navigation, smooth scroll-to-battle at the final section, and a flipped scroll-to-top state.
+- **Files Modified:**
+  - `index.html`:
+    - Added `#scroll-nav-arrow` button markup with inline SVG arrow and accessible dynamic `aria-label`.
+  - `index.css`:
+    - Added `.scroll-nav-arrow` fixed styling at `left: 2rem; bottom: 2rem;` (`1.25rem` on mobile), with dark translucent frosted glass backing (`rgba(18, 18, 20, 0.72)` / light mode `#FDFDF8`), coral-red hover accent (`#E63946`), slow gentle drift animation (`scrollArrowDrift 2.8s`), and `.pointing-up` 180° rotation state.
+    - Added `animation: none !important;` in `@media (prefers-reduced-motion: reduce)`.
+  - `main.js`:
+    - Added `updateScrollArrowState()` syncing with `currentSectionIndex`, URL hash, and viewport scroll position.
+    - Wired up click handler: sequentially transitions through card sections (`home` -> `stack` -> `projects` -> `experience` -> `blogs` -> `contact`), scrolls smoothly to `#final-battle` from contact, and flips to scroll back to `#home` when viewing the bottom battle section.
+- **Verification:** Verified visibility, non-overlapping positioning, responsive scaling, tactile sound feedback, and smooth navigation loop.
+- **Status:** Complete & verified.
+
+---
+
 ### [2026-10-10 20:45 IST] — Fix Unwanted Hover Tooltips & Polish Animations
 - **Author / Agent:** Antigravity AI
 - **Task:** Eliminate unwanted black browser tooltip rectangles appearing when hovering over Oneko cat, Japanese kanji watermark, pixel cat, and theme toggle. Polish card hover animations, background dot grid rendering, loop lifecycle, and implement full `prefers-reduced-motion` accessibility.
