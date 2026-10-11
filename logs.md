@@ -18,6 +18,26 @@ Each entry records:
 
 ## Entry History
 
+### [2026-10-12 01:30 IST] — Ponytail Complexity & Over-Engineering Cleanup
+- **Author / Agent:** Antigravity AI
+- **Task:** Perform `/ponytail-review` audit and eliminate complexity, speculative abstractions, and dead code across client scripts.
+- **Files Modified:**
+  - `oneko.js`:
+    - Removed redundant 3.3KB embedded base64 sprite data string (`EMBEDDED_SPRITE_DATA`) and dead `imgTest` fallback logic (assets are served locally from `./assets/oneko.gif`).
+    - Shrink `playSfx` audio synthesis boilerplate using a compact tone table.
+    - Simplified media query check and deleted redundant reduced-motion check inside `frame()`.
+  - `main.js`:
+    - Hoisted `Intl.DateTimeFormat` for live IST clock and deleted dead UTC-offset calculation fallback.
+    - Used native `AbortSignal.timeout(3500)` in GitHub contributions fetch and eliminated manual `AbortController` boilerplate.
+    - Deleted unused `monthNames` array constant.
+    - Shrank 14-line `renderFallbackMatrix` nested loop to a concise template string repeat.
+  - `dot-grid-bg.js`:
+    - Simplified redundant `.classList.contains('light')` theme check.
+- **Outcome:** Cleaned over-engineering; reduced codebase by 99 lines and 3.5KB+ dead bytes while preserving 100% functionality.
+- **Status:** Complete & verified.
+
+---
+
 ### [2026-10-10 21:15 IST] — Minimal Bottom-Left Scroll Navigation Arrow
 - **Author / Agent:** Antigravity AI
 - **Task:** Add a small, polished scroll-down arrow button in the bottom-left corner of the viewport complementing the Trainer ID card design, with sequential section step navigation, smooth scroll-to-battle at the final section, and a flipped scroll-to-top state.

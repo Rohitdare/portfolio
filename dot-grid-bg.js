@@ -142,7 +142,7 @@
     globalAngle += CFG.orbitSpeed * dt;
     ctx.clearRect(0, 0, W, H);
 
-    const isLight = document.documentElement.classList.contains("light") || document.body.classList.contains("light");
+    const isLight = document.documentElement.classList.contains("light");
     const restColor = isLight ? CFG.lightColor : CFG.darkColor;
     const hoverColor = isLight ? CFG.lightHover : CFG.darkHover;
 

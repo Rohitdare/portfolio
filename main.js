@@ -367,30 +367,15 @@
   }
 
   /* ── Live IST Clock (UTC + 5:30) ─────────────────────────── */
+  const istFormatter = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Asia/Kolkata',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true
+  });
   function updateISTClock() {
-    if (!istClock) return;
-    try {
-      const options = {
-        timeZone: 'Asia/Kolkata',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: true,
-      };
-      const formatter = new Intl.DateTimeFormat([], options);
-      const parts = formatter.format(new Date());
-      istClock.textContent = `IST ${parts}`;
-    } catch (e) {
-      // Fallback manual UTC+5:30 calculation
-      const d = new Date();
-      const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
-      const istDate = new Date(utc + (3600000 * 5.5));
-      let h = istDate.getHours();
-      const m = String(istDate.getMinutes()).padStart(2, '0');
-      const ampm = h >= 12 ? 'PM' : 'AM';
-      h = h % 12 || 12;
-      istClock.textContent = `IST ${String(h).padStart(2, '0')}:${m} ${ampm}`;
-    }
+    if (istClock) istClock.textContent = `IST ${istFormatter.format(new Date())}`;
   }
   setInterval(updateISTClock, 1000);
   updateISTClock();
@@ -403,61 +388,38 @@
     if (!grid) return;
 
     // Palette levels matching Trainer ID theme
-    const colors = [
-      '#DDD5C5', // 0: empty
-      '#F5B5B8', // 1: low
-      '#EE7B83', // 2: med
-      '#E63946', // 3: high
-      '#B5232F'  // 4: extreme
-    ];
-
+    const colors = ['#DDD5C5', '#F5B5B8', '#EE7B83', '#E63946', '#B5232F'];
     let data = null;
 
-    // 1. First attempt to fetch live from the GitHub contributions API
+    // 1. Fetch live from GitHub contributions API (with 3.5s timeout)
     try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 3500);
       const res = await fetch('https://github-contributions-api.jogruber.de/v4/Rohitdare?y=last', {
-        signal: controller.signal
+        signal: AbortSignal.timeout ? AbortSignal.timeout(3500) : undefined
       });
-      clearTimeout(timeoutId);
-      if (res.ok) {
-        data = await res.json();
-      }
-    } catch (err) {
-      console.warn('Live GitHub fetch failed, attempting local fallback:', err);
-    }
+      if (res.ok) data = await res.json();
+    } catch (_) {}
 
-    // 2. Fall back to local data/github-contributions.json if live fetch failed
-    if (!data || !Array.isArray(data.contributions)) {
+    // 2. Fall back to local data/github-contributions.json
+    if (!data?.contributions) {
       try {
         const localRes = await fetch('data/github-contributions.json');
-        if (localRes.ok) {
-          data = await localRes.json();
-        }
-      } catch (err) {
-        console.warn('Local GitHub contributions file fetch failed:', err);
-      }
+        if (localRes.ok) data = await localRes.json();
+      } catch (_) {}
     }
 
-    // If still no data, generate a basic placeholder structure
-    if (!data || !Array.isArray(data.contributions)) {
+    if (!data?.contributions) {
       renderFallbackMatrix();
       return;
     }
 
     // 3. Update total contributions label
-    const totalCount = data.total?.lastYear ?? 
-      (typeof data.total === 'object' ? Object.values(data.total)[0] : 101);
-    if (totalCountEl) {
-      totalCountEl.textContent = `${totalCount.toLocaleString()} contributions in the last year`;
-    }
+    const totalCount = data.total?.lastYear ?? (typeof data.total === 'object' ? Object.values(data.total)[0] : 101);
+    if (totalCountEl) totalCountEl.textContent = `${totalCount.toLocaleString()} contributions in the last year`;
 
     // 4. Render Grid Columns & Cells
     const contributions = data.contributions;
     let gridHtml = '';
     
-    // Group days into columns of 7 (Sunday to Saturday)
     for (let i = 0; i < contributions.length; i += 7) {
       const week = contributions.slice(i, i + 7);
       gridHtml += '<div class="heatmap-col">';
@@ -466,17 +428,11 @@
         if (day) {
           const count = day.count || 0;
           const level = Math.min(4, Math.max(0, day.level || 0));
-          const color = colors[level];
           const dateObj = new Date(day.date + 'T00:00:00');
-          const formattedDate = dateObj.toLocaleDateString('en-US', {
-            month: 'short',
-            day: 'numeric',
-            year: 'numeric'
-          });
+          const formattedDate = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
           const title = `${count} contribution${count === 1 ? '' : 's'} on ${formattedDate}`;
-          gridHtml += `<span class="heatmap-cell" style="background-color: ${color};" title="${title}" data-date="${day.date}" data-commits="${count}" role="button" tabindex="0"></span>`;
+          gridHtml += `<span class="heatmap-cell" style="background-color: ${colors[level]};" title="${title}" data-date="${day.date}" data-commits="${count}" role="button" tabindex="0"></span>`;
         } else {
-          // Empty slot placeholder for days past the end of the year
           gridHtml += '<span class="heatmap-cell" style="visibility: hidden;"></span>';
         }
       }
@@ -484,48 +440,32 @@
     }
     grid.innerHTML = gridHtml;
 
-    // Attach click listeners to open GitHub activity
     grid.querySelectorAll('.heatmap-cell[data-date]').forEach(cell => {
       cell.addEventListener('click', () => {
         const date = cell.getAttribute('data-date');
-        if (date) {
-          window.open(`https://github.com/Rohitdare?tab=overview&from=${date}&to=${date}`, '_blank', 'noopener,noreferrer');
-        }
+        if (date) window.open(`https://github.com/Rohitdare?tab=overview&from=${date}&to=${date}`, '_blank', 'noopener,noreferrer');
       });
     });
 
-    // 5. Update Month Labels to match actual range
+    // 5. Update Month Labels
     if (monthsRowEl) {
-      const monthNames = ['OCT', 'NOV', 'DEC', 'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT'];
       const activeMonths = [];
       let lastMonth = -1;
       contributions.forEach((c) => {
         const m = new Date(c.date + 'T00:00:00').getMonth();
         if (m !== lastMonth) {
-          const shortName = new Date(c.date + 'T00:00:00').toLocaleString('en-US', { month: 'short' }).toUpperCase();
-          activeMonths.push(shortName);
+          activeMonths.push(new Date(c.date + 'T00:00:00').toLocaleString('en-US', { month: 'short' }).toUpperCase());
           lastMonth = m;
         }
       });
-      if (activeMonths.length > 0) {
-        monthsRowEl.innerHTML = activeMonths.map(name => `<span>${name}</span>`).join('');
-      }
+      if (activeMonths.length > 0) monthsRowEl.innerHTML = activeMonths.map(name => `<span>${name}</span>`).join('');
     }
   }
 
   function renderFallbackMatrix() {
     const grid = document.getElementById('heatmap-grid');
     if (!grid) return;
-    const colors = ['#DDD5C5', '#F5B5B8', '#EE7B83', '#E63946', '#B5232F'];
-    let html = '';
-    for (let col = 0; col < 52; col++) {
-      html += '<div class="heatmap-col">';
-      for (let row = 0; row < 7; row++) {
-        html += `<span class="heatmap-cell" style="background-color: ${colors[0]};"></span>`;
-      }
-      html += '</div>';
-    }
-    grid.innerHTML = html;
+    grid.innerHTML = `<div class="heatmap-col">${'<span class="heatmap-cell" style="background-color: #DDD5C5;"></span>'.repeat(7)}</div>`.repeat(52);
   }
 
   loadRealGitHubContributions();
