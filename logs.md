@@ -18,6 +18,34 @@ Each entry records:
 
 ## Entry History
 
+### [2026-10-14 00:00 IST] — Architectural Migration to Next.js 16 + React 19 + TypeScript
+- **Author / Agent:** Antigravity AI
+- **Task:** Migrate the entire Trainer ID developer portfolio from vanilla HTML/CSS/JS into a modular, production-ready Next.js App Router application with React, TypeScript, and strict typing, while maintaining 100% visual fidelity, animations, assets, and interactions.
+- **Files Added & Structured:**
+  - `package.json`, `tsconfig.json`, `next.config.ts`, `.gitignore`.
+  - `public/assets/`, `public/data/`: Copied all assets and JSON datasets.
+  - `src/app/layout.tsx`: Root Server Component with metadata, typography, SVG favicon, and inline FOUT theme script.
+  - `src/app/page.tsx`: Main page assembling stage, sections, HUD, battle scene, and toasts.
+  - `src/app/globals.css`: Migrated complete design system tokens and responsive rules.
+  - `src/components/background/DotGridCanvas.tsx`: Canvas 2D interactive matrix with sleep/wake loop.
+  - `src/components/background/KatanaArtwork.tsx`: Hero background GIF and manga fallback.
+  - `src/components/navigation/`: `Header.tsx`, `NavPillBar.tsx`, `TimeBeacon.tsx`, `TelemetryHUD.tsx`, `ScrollNavArrow.tsx`.
+  - `src/components/trainer-card/`: `TrainerCardWrapper.tsx`, `LanyardAssembly.tsx`, `CardMetaHeader.tsx`.
+  - `src/components/sections/`: `HomeSection.tsx`, `StackSection.tsx`, `ProjectsSection.tsx`, `ExperienceSection.tsx`, `BlogsSection.tsx`, `ContactSection.tsx`.
+  - `src/components/battle-mode/FinalBattle.tsx`: Climax arena with Naruto vs Sasuke sprite, aura, sparks, and CTAs.
+  - `src/components/oneko/OnekoCompanion.tsx`: Desktop cat with cursor following, drag/place, sleeping/waking, and audio feedback.
+  - `src/components/ui/`: `HeatmapGrid.tsx` (live API + offline JSON fallback), `ToastNotice.tsx`.
+  - `src/hooks/`: `useCardTilt.ts`, `useSectionRouter.ts`, `useTheme.ts`, `useLiveISTClock.ts`.
+  - `src/lib/audio.ts`: Web Audio oscillator & exponential gain ramp synthesizer.
+  - `src/types/portfolio.ts`: Strict TypeScript interfaces for sections and contributions.
+- **Verification:**
+  - `npx tsc --noEmit` passed with 0 errors.
+  - `npm run build` compiled successfully (3/3 static pages).
+  - Headless browser verification confirmed 0 console errors, proper 3D card tilt, active tab transitions, live IST clock, GitHub heatmap rendering, and Oneko companion functionality.
+- **Status:** Complete, tested & verified on branch `migration/nextjs-react`.
+
+---
+
 ### [2026-10-12 01:30 IST] — Ponytail Complexity & Over-Engineering Cleanup
 - **Author / Agent:** Antigravity AI
 - **Task:** Perform `/ponytail-review` audit and eliminate complexity, speculative abstractions, and dead code across client scripts.

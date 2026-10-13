@@ -50,7 +50,61 @@ graph TD
 
 ---
 
-## 3. Function & Module Mapping
+## 3. Next.js + React Component Architecture
+
+```mermaid
+graph TD
+    Root[RootLayout: src/app/layout.tsx] --> Canvas[DotGridCanvas: Level 0]
+    Root --> Cat[OnekoCompanion: Level 5]
+    Root --> Page[HomePage: src/app/page.tsx]
+    Page --> Header[Header: Level 4]
+    Header --> Beacon[TimeBeacon: useLiveISTClock]
+    Header --> NavPill[NavPillBar: useTheme]
+    Page --> HUD[TelemetryHUD: Level 3]
+    Page --> Stage[main.main-stage]
+    Stage --> Katana[KatanaArtwork: Level 1]
+    Stage --> CardWrap[TrainerCardWrapper: useCardTilt]
+    CardWrap --> Lanyard[LanyardAssembly: Level 2]
+    CardWrap --> CardHeader[CardMetaHeader]
+    CardWrap --> Sections[6 Card Sections: Home, Stack, Projects, Experience, Blogs, Contact]
+    Sections --> Heatmap[HeatmapGrid]
+    Page --> Battle[FinalBattle]
+    Page --> Arrow[ScrollNavArrow]
+    Page --> Toast[ToastNotice]
+```
+
+| Next.js Component / Hook | Type | Source Path | Replaces / Maps From |
+| :--- | :--- | :--- | :--- |
+| `RootLayout` | Server Component | `src/app/layout.tsx` | `index.html` `<head>`, font links, theme inline bootstrap |
+| `HomePage` | Client Component | `src/app/page.tsx` | Main page assembly & scroll coordinator |
+| `DotGridCanvas` | Client Component | `src/components/background/DotGridCanvas.tsx` | `dot-grid-bg.js` |
+| `KatanaArtwork` | Client Component | `src/components/background/KatanaArtwork.tsx` | `.gif-artwork-layer` |
+| `Header` & `NavPillBar` | Client Component | `src/components/navigation/` | `.app-header`, `.nav-pill-bar` |
+| `TimeBeacon` | Client Component | `src/components/navigation/TimeBeacon.tsx` | `#ist-clock` & `.beacon-dot` |
+| `TelemetryHUD` | Client Component | `src/components/navigation/TelemetryHUD.tsx` | `.telemetry-hud` (`#telemetry-index`, `#telemetry-bar`) |
+| `ScrollNavArrow` | Client Component | `src/components/navigation/ScrollNavArrow.tsx` | `#scroll-nav-arrow` |
+| `TrainerCardWrapper` | Client Component | `src/components/trainer-card/TrainerCardWrapper.tsx` | `#card-3d-wrapper` & `#trainer-card` |
+| `LanyardAssembly` | Client Component | `src/components/trainer-card/LanyardAssembly.tsx` | `#lanyard-assembly` |
+| `CardMetaHeader` | Client Component | `src/components/trainer-card/CardMetaHeader.tsx` | `.card-punch-slot`, `.card-meta-header` |
+| `HomeSection` | Client Component | `src/components/sections/HomeSection.tsx` | `#section-home` |
+| `StackSection` | Client Component | `src/components/sections/StackSection.tsx` | `#section-stack` |
+| `ProjectsSection` | Client Component | `src/components/sections/ProjectsSection.tsx` | `#section-projects` |
+| `ExperienceSection` | Client Component | `src/components/sections/ExperienceSection.tsx` | `#section-experience` |
+| `BlogsSection` | Client Component | `src/components/sections/BlogsSection.tsx` | `#section-blogs` |
+| `ContactSection` | Client Component | `src/components/sections/ContactSection.tsx` | `#section-contact` & `#contact-form` |
+| `FinalBattle` | Client Component | `src/components/battle-mode/FinalBattle.tsx` | `#final-battle` |
+| `OnekoCompanion` | Client Component | `src/components/oneko/OnekoCompanion.tsx` | `oneko.js` |
+| `HeatmapGrid` | Client Component | `src/components/ui/HeatmapGrid.tsx` | `#heatmap-grid`, `loadRealGitHubContributions` |
+| `ToastNotice` | Client Component | `src/components/ui/ToastNotice.tsx` | `#toast-notice` |
+| `useCardTilt` | Custom Hook | `src/hooks/useCardTilt.ts` | `main.js` 3D tilt & lanyard sway physics |
+| `useSectionRouter` | Custom Hook | `src/hooks/useSectionRouter.ts` | `main.js` hash routing & section switcher |
+| `useTheme` | Custom Hook | `src/hooks/useTheme.ts` | `main.js` light/dark theme persistence |
+| `useLiveISTClock` | Custom Hook | `src/hooks/useLiveISTClock.ts` | `main.js` `updateISTClock` |
+| `playBeep` | Utility | `src/lib/audio.ts` | `main.js` Web Audio oscillator chime |
+
+---
+
+## 4. Legacy Function & Module Mapping (Historical Reference)
 
 ### A. `main.js` (Core Application Controller)
 
