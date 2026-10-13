@@ -52,4 +52,5 @@ npm run start
 
 ## 📄 License
 
-MIT © [Rohit Darekar](https://github.com/Rohitdare)
+MIT © [Rohit Dare
+](https://github.com/Rohitdare)
