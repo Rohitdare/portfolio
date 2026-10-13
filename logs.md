@@ -18,6 +18,16 @@ Each entry records:
 
 ## Entry History
 
+### [2026-10-14 00:18 IST] — Add Simple Project README
+- **Author / Agent:** Antigravity AI
+- **Task:** Add a clean, simple, and concise `README.md` introducing the project, features, tech stack, getting started guide, and license.
+- **Files Added:**
+  - `README.md`
+- **Verification:** Verified markdown formatting and links.
+- **Status:** Complete.
+
+---
+
 ### [2026-10-14 00:00 IST] — Architectural Migration to Next.js 16 + React 19 + TypeScript
 - **Author / Agent:** Antigravity AI
 - **Task:** Migrate the entire Trainer ID developer portfolio from vanilla HTML/CSS/JS into a modular, production-ready Next.js App Router application with React, TypeScript, and strict typing, while maintaining 100% visual fidelity, animations, assets, and interactions.
